@@ -4,24 +4,102 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0a0a0a;
+  --muted: #6b6b6b;
+  --rule: #e5e5e5;
+  --accent: #2f5bff;
+  --code-bg: #f5f5f5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #f2f2f2;
+  --muted: #8f8f8f;
+  --rule: #262626;
+  --accent: #5c7cff;
+  --code-bg: #141414;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+@layer components {
+  /* Mono uppercase label used for section numbers, dates, tags and nav */
+  .meta {
+    @apply font-mono text-xs uppercase tracking-[0.12em];
+  }
+
+  /* Underline that grows from the left on hover */
+  .link {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition:
+      background-size 0.25s ease,
+      color 0.2s ease;
+  }
+  .link:hover,
+  .group:hover .link {
+    background-size: 100% 1px;
+  }
+
+  .arrow {
+    @apply inline-block transition-transform duration-200;
+  }
+  .group:hover .arrow {
+    transform: translateX(4px);
+  }
+  .group:hover .arrow-ne {
+    transform: translate(3px, -3px);
+  }
+}
+
+/* Code blocks from rehype-pretty-code (dual light/dark themes) */
+.prose pre {
+  background-color: var(--code-bg) !important;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+}
+.prose pre code span {
+  color: var(--shiki-light);
+}
+.dark .prose pre code span {
+  color: var(--shiki-dark);
+}
+.prose :not(pre) > code {
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  padding: 0.1em 0.35em;
+  font-weight: 400;
+}
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
   }
 }
